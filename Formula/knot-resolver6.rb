@@ -3,15 +3,9 @@ class KnotResolver6 < Formula
 
   desc "DNS resolver scalable from huge resolver farms down to home network routers"
   homepage "https://www.knot-resolver.cz"
-  url "https://secure.nic.cz/files/knot-resolver/knot-resolver-6.0.15.tar.xz"
-  sha256 "28195f681c00913a16c701c160798e4a28e88af1524351e1a55552b508bf4144"
-  license all_of: ["CC0-1.0", "GPL-3.0-or-later", "LGPL-2.1-or-later", "MIT"]
-  head "https://gitlab.labs.nic.cz/knot/knot-resolver.git", branch: "master"
-
-  livecheck do
-    url "https://www.knot-resolver.cz/download/"
-    regex(/href=.*?knot-resolver[._-]v?(\d+(?:\.\d+)+)\.t[^>]*?>[^<]*?early-access/i)
-  end
+  url "https://gitlab.labs.nic.cz/knot/knot-resolver.git", branch: "manager-macos"
+  version "6.0.15"
+  license "GPL-3.0-or-later"
 
   bottle do
     sha256 arm64_tahoe:   "6eba212c347984073fc9d40e134202867ae0cbfb8e25cd247b5943335ae86e2f"
@@ -93,6 +87,8 @@ class KnotResolver6 < Formula
     venv = virtualenv_install_with_resources without: ["prometheus-client", "watchdog"]
     venv.pip_install "prometheus-client" if build.with? "prometheus"
     venv.pip_install "watchdog" if build.with? "watchdog"
+
+    (etc/"knot-resolver").install buildpath/"etc/config/config.macos.yaml" => "config.yaml"
   end
 
   def post_install
@@ -105,7 +101,7 @@ class KnotResolver6 < Formula
     working_dir var/"knot-resolver"
     input_path File::NULL
     log_path File::NULL
-    error_log_path var/"log/knot-resolver.log"
+    error_log_path var/"log/knot-resolver6.log"
   end
 
   test do
