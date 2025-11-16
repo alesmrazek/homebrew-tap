@@ -134,12 +134,17 @@ class KnotResolver6 < Formula
   end
 
   def install
-    args = ["--default-library=static", "--prefix=#{var}"]
+    args = ["--default-library=static"]
     args << "-Dsystemd_files=enabled" if OS.linux?
 
-    system "meson", "setup", "build", *args, *std_meson_args
-    system "meson", "compile", "-C", "build", "--verbose"
-    system "meson", "install", "-C", "build"
+    build_dir = ".build"
+    system "meson", "setup", build_dir, *args, *std_meson_args
+    system "meson", "compile", "-C", build_dir, "--verbose"
+    system "meson", "install", "-C", build_dir
+
+    constantspy = "python/knot_resolver/constants.py"
+    (buildpath/constantspy).unlink
+    (buildpath/"python/knot_resolver").install buildpath/build_dir/constantspy
 
     venv = virtualenv_install_with_resources without: ["prometheus-client", "watchdog"]
     venv.pip_install "prometheus-client" if build.with? "prometheus"
