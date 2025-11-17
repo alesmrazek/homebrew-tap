@@ -154,6 +154,10 @@ class KnotResolver6 < Formula
     (bin/"knot-resolver").write_env_script libexec/"bin/knot-resolver",
       PATH: "#{libexec}/bin:$PATH"
 
+    (bin/"kresctl").unlink if (bin/"kresctl").exist?
+    (bin/"kresctl").write_env_script libexec/"bin/kresctl",
+      ARGS: "--socket #{var}/knot-resolver/kres-api.sock"
+
     (buildpath/"config.yaml").write(config_yaml)
     (etc/"knot-resolver").install "config.yaml"
   end
@@ -166,7 +170,7 @@ class KnotResolver6 < Formula
         listen:
           - interface:
               - 127.0.0.1@5353
-          cache:
+      cache:
         storage: #{var}/cache/knot-resolver
       management:
         unix-socket: #{var}/knot-resolver/kres-api.sock
