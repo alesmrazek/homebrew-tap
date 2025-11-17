@@ -169,7 +169,8 @@ class KnotResolver6 < Formula
       network:
         listen:
           - interface:
-              - 127.0.0.1@5353
+              - 127.0.0.1@53
+              - ::1@53
       cache:
         storage: #{var}/cache/knot-resolver
       management:
