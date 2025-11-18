@@ -3,19 +3,14 @@ class KnotResolver6 < Formula
 
   desc "DNS resolver scalable from huge resolver farms down to home network routers"
   homepage "https://www.knot-resolver.cz"
-  url "https://gitlab.labs.nic.cz/knot/knot-resolver.git", branch: "manager-macos"
-  version "6.0.16"
+  url "https://secure.nic.cz/files/knot-resolver/knot-resolver-6.0.16.tar.xz"
+  sha256 "ed7dff61e0cc28c508a6e140d10f9bafb726115f485b239b41a49e7fb670b12d"
   license "GPL-3.0-or-later"
+  head "https://gitlab.labs.nic.cz/knot/knot-resolver.git", branch: "master"
 
-  conflicts_with "knot-resolver", because: "Versions 5 and 6 of Knot Resolver cannot be installed simultaneously."
-
-  bottle do
-    sha256 arm64_tahoe:   "6eba212c347984073fc9d40e134202867ae0cbfb8e25cd247b5943335ae86e2f"
-    sha256 arm64_sequoia: "125e0626c3a093255a706cfd558ee53c75cec4adfa08e1f001c214c6d37a15a6"
-    sha256 arm64_sonoma:  "ddaeaf61ebbec2f0f02c63552c1e53cf341b36a89484873a4594d04417ed12d0"
-    sha256 sonoma:        "4b83b4b7c1f48bce2dd0e3a8d6fd854c4d57dac8addeafa93ee59693b6c35709"
-    sha256 arm64_linux:   "a44b90de3037d1f0247dbf2d94455f81ba45ffe332335a6075e1c0b3b559a0e9"
-    sha256 x86_64_linux:  "5da6935c2d96ed81f408b87a859613a16e730ff1a616b56350eca31a59951310"
+  livecheck do
+    url "https://www.knot-resolver.cz/download/"
+    regex(/href=.*?knot-resolver[._-]v?(\d+(?:\.\d+)+)\.t[^>]*?>[^<]*?early-access/i)
   end
 
   option "with-prometheus", "Enable optional prometheus features"
@@ -24,7 +19,6 @@ class KnotResolver6 < Formula
   depends_on "meson" => :build
   depends_on "ninja" => :build
   depends_on "pkgconf" => :build
-
   depends_on "fstrm"
   depends_on "gnutls"
   depends_on "knot"
@@ -34,7 +28,6 @@ class KnotResolver6 < Formula
   depends_on "lmdb"
   depends_on "luajit"
   depends_on "protobuf-c"
-
   depends_on "python@3.13"
 
   on_linux do
@@ -42,6 +35,9 @@ class KnotResolver6 < Formula
     depends_on "libedit"
     depends_on "systemd"
   end
+
+  conflicts_with "knot-resolver",
+    because: "different versions of Knot Resolver cannot be installed simultaneously"
 
   resource "aiohttp" do
     url "https://files.pythonhosted.org/packages/1c/ce/3b83ebba6b3207a7135e5fcaba49706f8a4b6008153b4e30540c982fae26/aiohttp-3.13.2.tar.gz"
@@ -113,7 +109,7 @@ class KnotResolver6 < Formula
     sha256 "4a2bf149adf42997e1bb44b70c43b613275ec9852c3edacca86a9166b27e945e"
   end
 
-  resource "meld3" do
+  resource "meld" do
     url "https://files.pythonhosted.org/packages/64/34/7a43890031d05b2d3ed269ea6fa256016a8675f2420255caf22bf33bff98/meld-1.0.2.tar.gz"
     sha256 "696f67d4e88fc51f07463dcf96d3195734d1e3464c55ee95ebed2cf1c38134e9"
   end
